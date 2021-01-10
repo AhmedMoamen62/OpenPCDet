@@ -22,7 +22,7 @@ pointrcnn = PointRCNN()
 pointrcnn_iou = PointRCNNIoU()
 partfree = PartFree()
 partanchor = PartAnchor()
-paper = pointpillars
+paper = pvrcnn
 
 class DemoDataset(DatasetTemplate):
     def __init__(self, dataset_cfg, class_names, training=True, root_path=None, logger=None, ext='.bin'):
@@ -98,17 +98,18 @@ def main():
     avg_fps = 0
     with torch.no_grad():
         for idx, data_dict in enumerate(demo_dataset):
-            logger.info(f'Visualized sample index: \t{idx + 1}')
+            logger.info(f'Visualized sample index: {idx + 1}')
             data_dict = demo_dataset.collate_batch([data_dict])
             load_data_to_gpu(data_dict)
             start = time()
             pred_dicts, _ = model.forward(data_dict)
             end = time()
-            time = end - start
-            avg_time += time
-            avg_fps += 1/time
-            logger.info(f'Time for sample index: \t{idx + 1} is {"{:.2f}".format(time)}s')
-            logger.info(f'FPS for sample index: \t{idx + 1} is {"{:.2f}".format(1/time)}s')
+            time_forward = (end - start)*1000
+            if idx > 0:
+                avg_time += time_forward
+                avg_fps += 1000/time_forward
+            logger.info(f'Time in ms for sample index: {idx + 1} is {"{:.2f}".format(time_forward)} ms')
+            logger.info(f'FPS for sample index: {idx + 1} is {"{:.2f}".format(1000/time_forward)} frame per second')
 
             # V.draw_scenes(
             #     points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
@@ -116,10 +117,10 @@ def main():
             # )
             # mlab.show(stop=True)
             
-    avg_time /= len(demo_dataset)
-    avg_fps /= len(demo_dataset)
-    logger.info(f'Average Time for {paper.type}: is {"{:.2f}".format(avg_time)}s')
-    logger.info(f'Average FPS for {paper.type}: is {"{:.2f}".format(avg_fps)}s')
+    avg_time /= len(demo_dataset) - 1
+    avg_fps /= len(demo_dataset) - 1
+    logger.info(f'Average Time in ms for {paper.type}: is {"{:.2f}".format(avg_time)} ms')
+    logger.info(f'Average FPS for {paper.type}: is {"{:.2f}".format(avg_fps)} frame per second')
     logger.info('Demo done.')
 
 
