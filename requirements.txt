@@ -1,8 +1,9 @@
 numpy
-torch==1.3
+torch>=1.3
 numba
 tensorboardX
 easydict
 pyyaml
 scikit-image
 tqdm
+cmake
