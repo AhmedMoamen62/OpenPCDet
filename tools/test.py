@@ -26,7 +26,7 @@ pointrcnn = PointRCNN()
 pointrcnn_iou = PointRCNNIoU()
 partfree = PartFree()
 partanchor = PartAnchor()
-paper = pvrcnn
+paper = pointrcnn
 
 def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
