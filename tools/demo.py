@@ -111,11 +111,11 @@ def main():
             logger.info(f'Time in ms for sample index: {idx + 1} is {"{:.2f}".format(time_forward)} ms')
             logger.info(f'FPS for sample index: {idx + 1} is {"{:.2f}".format(1000/time_forward)} frame per second')
 
-            # V.draw_scenes(
-            #     points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
-            #     ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
-            # )
-            # mlab.show(stop=True)
+            V.draw_scenes(
+                points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
+                ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
+            )
+            mlab.show(stop=True)
             
     avg_time /= len(demo_dataset) - 1
     avg_fps /= len(demo_dataset) - 1
